@@ -10,7 +10,7 @@
 </div>
 
 <p align="center">
-  <img src="assets/Fish Challenge.png" width="80%">
+  <img src="assets/Challenge.png" width="80%">
 </p>
 <p align="center">
   <img src="assets/GIF2.gif" height="300" />
