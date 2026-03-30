@@ -12,8 +12,8 @@
             --bg-color: #ffffff;
             --text-color: #333d47;
             --secondary-text: #6c757d;
-            --accent-color: #1a5678;
-            --hover-accent: #123d56;
+            --accent-color: #FF8A00;
+            --hover-accent: #B05C24;
             --code-bg: #f8f9fa;
             --border-color: #e9ecef;
             --table-head-bg: #fdfdfe;
@@ -62,6 +62,39 @@
             text-align: center;
         }
 
+        .custom-title {
+            font-size: 2.6rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin: 0;
+            text-align: center;
+            letter-spacing: -0.04rem;
+        }
+
+        .title-line1 {
+            color: #FF8A00; 
+            text-shadow: 2px 2px 5px rgba(26, 86, 120, 0.25);
+        }
+
+        .title-line2 {
+            color: #302522; 
+            font-size: 2.2rem; 
+            text-shadow: 1px 1px 4px rgba(209, 73, 91, 0.2);
+        }
+
+        .links a.btn-disabled {
+            background-color: #6c757d; 
+            color: #e9ecef; 
+            cursor: not-allowed; 
+            box-shadow: none; 
+        }
+
+        .links a.btn-disabled:hover {
+            background-color: #6c757d; 
+            transform: none; 
+            box-shadow: none;
+        }
+
         .fish-icon {
             font-size: 2.2rem; 
             color: var(--fish-icon-color);
@@ -70,7 +103,7 @@
         }
 
         header:hover .fish-icon {
-            color: #406fcc;
+            color: #FF8A00;
         }
 
         .authors {
@@ -236,16 +269,19 @@
     <header>
         <div class="title-container">
             <i class="fa-solid fa-fish fish-icon"></i>
-            <h1>When Fish Look Alike: <br> Tracking Identities with Dual-branch Elasticity</h1>
+            <h1 class="custom-title">
+                <span class="title-line1">When Fish Look Alike:</span> <br>
+                <span class="title-line2">Tracking Identities with Dual-branch Elasticity</span>
+            </h1>
             <i class="fa-solid fa-fish fish-icon" style="transform: scaleX(-1);"></i>
         </div>
 
         <div class="authors">Anonymous Authors</div>
         
         <div class="links">
-            <a href="#"><i class="fa-regular fa-file-pdf" style="margin-right: 8px;"></i> Paper (Anonymous Review)</a>
+            <a href="#" class="btn-disabled" onclick="return false;"><i class="fa-regular fa-file-pdf" style="margin-right: 8px;"></i> Paper (Unavailable - Blind Review)</a>
             <a href="https://github.com/vranlee/TIDE"><i class="fa-solid fa-code" style="margin-right: 8px;"></i> Code </a>
-            <a href="#"><i class="fa-solid fa-database" style="margin-right: 8px;"></i> Datasets (Anonymous Review)</a>
+            <a href="#" class="btn-disabled" onclick="return false;"><i class="fa-solid fa-database" style="margin-right: 8px;"></i> Datasets (Unavailable - Blind Review)</a>
         </div>
     </header>
 
