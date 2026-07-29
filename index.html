@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIDE: When Fish Look Alike</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #1a202c;
+        }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .academic-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.2s;
+        }
+        .academic-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-color: #cbd5e0;
+        }
+        .nav-link.active {
+            color: #f97316; /* Orange for TIDE */
+            border-bottom: 2px solid #f97316;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-bold text-xl tracking-tight text-slate-800 flex items-center gap-2">
+                        <i data-lucide="fish" class="w-6 h-6 text-orange-500"></i>
+                        TIDE
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="nav-link text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors py-5">Overview</a>
+                    <a href="#contributions" class="nav-link text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors py-5">Contributions</a>
+                    <a href="#performance" class="nav-link text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors py-5">Performance</a>
+                    <a href="#quickstart" class="nav-link text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors py-5">Quick Start</a>
+                    <a href="#downloads" class="nav-link text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors py-5">Downloads</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-slate-500 hover:text-slate-700">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div id="overview" class="bg-white border-b border-slate-200 pt-16 pb-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
+                <span class="text-orange-500">When Fish Look Alike:</span><br/>
+                Tracking Identities with Dual-branch Elasticity
+            </h1>
+            
+            <div class="text-slate-600 mb-6 mt-8 text-lg">
+                <span class="font-medium text-slate-900">Vran Lee, Xin Liu, Yijie Wei, Yeqiang Liu, Hwa Liang Leo, 
+                <span class="font-medium text-slate-900">Zhenbo Li*</span>
+            </div>
+            
+            <!-- Logos -->
+            <div class="flex justify-center items-center gap-8 mb-8 transition-all duration-500">
+                <img src="assets/cau_logo.jpg" alt="China Agricultural University" class="h-16 w-auto object-contain" onerror="this.src='https://placehold.co/200x80?text=CAU+Logo'">
+                <img src="assets/bnu_logo.png" alt="Beijing Normal University" class="h-16 w-auto object-contain" onerror="this.src='https://placehold.co/200x80?text=BNU+Logo'">
+                <img src="assets/nus_logo.png" alt="National University of Singapore" class="h-16 w-auto object-contain" onerror="this.src='https://placehold.co/200x80?text=NUS+Logo'">
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex justify-center gap-3 flex-wrap">
+                <a href="https://vranlee.github.io/TIDE/" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition-colors">
+                    <i data-lucide="globe" class="w-4 h-4 mr-2"></i> Project
+                </a>
+                <a href="#TODO" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-100 hover:bg-red-100 transition-colors">
+                    <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Paper
+                </a>
+                <a href="https://github.com/vranlee/TIDE" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-slate-900 text-white border border-slate-900 hover:bg-slate-700 transition-colors">
+                    <i data-lucide="github" class="w-4 h-4 mr-2"></i> Code
+                </a>
+                <a href="#downloads" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100 transition-colors">
+                    <i data-lucide="database" class="w-4 h-4 mr-2"></i> Dataset
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- Media Blocks -->
+        <section class="max-w-5xl mx-auto">
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-2 md:p-6 text-center mb-8">
+                <img src="assets/Challenge.png" alt="Fish Tracking Challenge" class="w-full h-auto rounded shadow-sm border border-slate-200" onerror="this.src='https://placehold.co/1000x400/e2e8f0/475569?text=Tracking+Challenge'">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+                    <img src="assets/GIF2.gif" alt="Tracking Demo 1" class="w-full h-64 md:h-80 object-cover rounded shadow-sm" onerror="this.src='https://placehold.co/500x320/e2e8f0/475569?text=Demo+1'">
+                </div>
+                <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+                    <img src="assets/GIF1.gif" alt="Tracking Demo 2" class="w-full h-64 md:h-80 object-cover rounded shadow-sm" onerror="this.src='https://placehold.co/500x320/e2e8f0/475569?text=Demo+2'">
+                </div>
+            </div>
+        </section>
+
+        <!-- Abstract -->
+        <section class="max-w-4xl mx-auto">
+            <div class="flex items-center mb-4">
+                <i data-lucide="book-open" class="w-6 h-6 text-orange-500 mr-2"></i>
+                <h2 class="text-2xl font-bold text-slate-900">Abstract</h2>
+            </div>
+            <div class="text-slate-600 leading-relaxed text-lg text-justify space-y-4">
+                <p>
+                    Tracking fish in dense aquaculture environments poses significant challenges due to minimal inter-individual variance, rapid morphological deformations, and frequent occlusions. Recent state-of-the-art methods push accuracy boundaries by employing heavy Separated Detection and Embedding (SDE) paradigms alongside complex association metrics. However, their exorbitant computational overhead prohibits real-time deployment on edge devices.
+                </p>
+                <p>
+                    To bridge the gap between academic benchmarks and resource-constrained industrial deployment, we propose <strong>TIDE</strong>, a framework for Tracking Identities with Dual-branch Elasticity based on a Joint Detection and Embedding (JDE) paradigm. TIDE offers scalable architectural configurations to flexibly address diverse hardware constraints under a unified design philosophy. Furthermore, we introduce the <strong>Adaptive Geometric Correspondence IoU (AGCIoU)</strong>. This minimalistic association mechanism circumvents the need for computationally expensive re-identification modules and complex morphological metrics. Instead, it leverages robust spatial and geometric cues to effectively maintain identities through severe occlusions with minimal overhead.
+                </p>
+                <p>
+                    Extensive evaluations on challenging stress-test datasets demonstrate that TIDE establishes a superior accuracy-efficiency trade-off. Specifically, the framework achieves highly competitive tracking accuracy with a Higher Order Tracking Accuracy (HOTA) score of 28.43 while operating at a remarkably efficient 20.47G FLOPs. This exceptional efficiency represents a 38.7-fold computational reduction compared to standard heavy-backbone MOT trackers, proving its viability for real-world edge deployment.
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Contributions -->
+        <section id="contributions" class="max-w-4xl mx-auto">
+            <div class="flex items-center mb-6">
+                <i data-lucide="award" class="w-6 h-6 text-orange-500 mr-2"></i>
+                <h2 class="text-2xl font-bold text-slate-900">Key Contributions</h2>
+            </div>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="academic-card p-6 rounded-xl">
+                    <ul class="space-y-4">
+                        <li class="flex items-start text-slate-600">
+                            <i data-lucide="check-circle-2" class="w-6 h-6 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-slate-900">Dual-Branch Elastic Framework:</strong> We propose <em>TIDE</em>, a computationally elastic JDE framework that effectively resolves the computational bottlenecks of tracking dense, homogeneous targets. It features scalable architectural configurations to flexibly address diverse hardware constraints.
+                            </div>
+                        </li>
+                        <li class="flex items-start text-slate-600">
+                            <i data-lucide="check-circle-2" class="w-6 h-6 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-slate-900">Minimalist Geometric Association:</strong> We introduce the <em>Adaptive Geometric Correspondence IoU (AGCIoU)</em>. As a minimalist alternative to heavy Re-ID networks, it maintains robust identity consistency during severe occlusions using only spatial and geometric cues.
+                            </div>
+                        </li>
+                        <li class="flex items-start text-slate-600">
+                            <i data-lucide="check-circle-2" class="w-6 h-6 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-slate-900">Superior Accuracy-Efficiency Balance:</strong> We validate TIDE on the specialized <strong>MFT-Edge</strong> stress-test benchmark. The framework achieves a competitive HOTA of 28.43 at just 20.47G FLOPs. This <strong>38.7-fold</strong> computational reduction over standard heavy-backbone trackers proves its viability for industrial edge deployment.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Comparison -->
+        <section id="performance">
+            <div class="flex items-center mb-6">
+                <i data-lucide="bar-chart-2" class="w-6 h-6 text-orange-500 mr-2"></i>
+                <h2 class="text-2xl font-bold text-slate-900">Tracking Performance (MFT-Edge)</h2>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-slate-200">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Method</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Params ↓</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">FLOPs ↓</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider font-bold text-orange-700">HOTA ↑</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider font-bold text-orange-700">IDF1 ↑</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider font-bold text-orange-700">MOTA ↑</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider font-bold text-blue-700">IDs ↓</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">SORT</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">99.00M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">793.21G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">22.73</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">23.91</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">48.67</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">2599</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">ByteTrack</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">99.00M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">793.21G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">19.18</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">19.37</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">40.17</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">2325</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">OC-SORT</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">99.00M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">793.21G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">22.99</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">24.14</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">48.44</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">2674</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">FairMOT</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">16.55M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">72.93G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">27.26</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">29.68</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">60.74</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">2456</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">CMFTNet</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">45.08M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">137.77G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">27.08</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">29.93</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">61.90</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">2716</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">TrackFormer</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">42.95M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">143.43G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">26.51</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">26.73</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">43.42</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">899</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">SU-T</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">99.00M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">793.21G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">34.41</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">40.50</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">68.52</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 text-center">1902</td>
+                            </tr>
+                            <!-- Ours -->
+                            <tr class="bg-orange-50/60">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700">TIDE-L (Ours)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">5.79M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">20.47G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">28.43</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">36.29</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">47.84</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">574</td>
+                            </tr>
+                            <tr class="bg-orange-50/60">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700">TIDE-S (Ours)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">32.59M</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">90.13G</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">29.98</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">39.01</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">54.74</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-700 text-center">908</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="quickstart" class="max-w-4xl mx-auto">
+            <div class="flex items-center mb-6">
+                <i data-lucide="terminal" class="w-6 h-6 text-orange-500 mr-2"></i>
+                <h2 class="text-2xl font-bold text-slate-900">Quick Start</h2>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="academic-card p-6 rounded-xl">
+                    <h3 class="font-bold text-slate-800 mb-3 text-lg border-b pb-2">1. Prerequisites</h3>
+                    <ul class="list-disc pl-5 text-slate-600 mb-4 space-y-1">
+                        <li>CUDA >= 11.0</li>
+                        <li>Python >= 3.8</li>
+                        <li>PyTorch >= 1.7.0</li>
+                        <li>Ubuntu 18.04 or later (Windows is also supported but may require additional setup)</li>
+                    </ul>
+
+                    <h3 class="font-bold text-slate-800 mb-3 mt-6 text-lg border-b pb-2">2. Installation</h3>
+                    <pre><code>git clone https://github.com/vranlee/TIDE.git
+cd TIDE
+
+conda env create -f requirements.yaml
+conda activate TIDE</code></pre>
+
+                    <h3 class="font-bold text-slate-800 mb-3 mt-6 text-lg border-b pb-2">3. Training Sample</h3>
+                    <pre><code>python train.py cmot   --exp_id YOUR-EXP-NAMES --data_cfg '../src/lib/cfg/mft_edge.json'   --lr 5e-4 --batch_size 16 --wh_weight 0.5   --arch 'tides/tidel' --num_epochs 30 --reid_dim 64</code></pre>
+
+                    <h3 class="font-bold text-slate-800 mb-3 mt-6 text-lg border-b pb-2">4. Testing Sample</h3>
+                    <pre><code>python track.py cmot   --val_MFT_Edge True   --data_dir /DATASETS/MFT   --load_model ../exp/cmot/YOUR-EXP-NAMES/model_best.pth   --arch 'tides/tidel'   --conf_thres 0.4</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Downloads -->
+        <section id="downloads">
+            <div class="flex items-center mb-6">
+                <i data-lucide="download" class="w-6 h-6 text-orange-500 mr-2"></i>
+                <h2 class="text-2xl font-bold text-slate-900">Downloads</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Datasets Card -->
+                <div class="academic-card p-6 rounded-xl border-l-4 border-l-blue-500">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">MFT_Edge Dataset</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Dataset for test (utilize MFT25 or your own datasets as well).
+                    </p>
+                    <a href="https://pan.baidu.com/s/1o1tBsusM9VxSxmz--IzldQ?pwd=wfeq" target="_blank" class="flex items-center justify-between w-full px-4 py-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors group">
+                        <span class="font-mono text-sm text-slate-700">BaiduYun (Pwd: wfeq)</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
+                    </a>
+                </div>
+
+                <!-- Pretrained Models Card -->
+                <div class="academic-card p-6 rounded-xl border-l-4 border-l-orange-500">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Pretrained Models</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Includes pretrained models and checkpoints for TIDE framework.
+                    </p>
+                    <a href="https://pan.baidu.com/s/10yF69NL-A_uOCsu_prcMzw?pwd=v57h" target="_blank" class="flex items-center justify-between w-full px-4 py-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors group">
+                        <span class="font-mono text-sm text-slate-700">BaiduYun (Pwd: v57h)</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acknowledgements -->
+        <section class="max-w-4xl mx-auto">
+            <div class="academic-card p-6 rounded-xl bg-slate-50 border-dashed">
+                <h3 class="font-bold text-slate-800 mb-2 flex items-center">
+                    <i data-lucide="heart" class="w-5 h-5 text-red-500 mr-2"></i> Acknowledgements
+                </h3>
+                <p class="text-sm text-slate-600">
+                    A large part of the code is borrowed from <a href="https://github.com/sompt22/CountingMOT" class="text-orange-600 hover:underline">sompt22</a>, <a href="https://github.com/apple/ml-fastvit" class="text-orange-600 hover:underline">apple</a>, and <a href="https://github.com/ultralytics/ultralytics" class="text-orange-600 hover:underline">ultralytics</a>. Thanks for their wonderful works!
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="border-t border-slate-200 pt-12 text-center">
+            <h2 class="text-xl font-bold text-slate-900 mb-6">Contact</h2>
+            <div class="flex flex-col justify-center items-center gap-4">
+                <a href="mailto:vranlee86@gmail.com" class="flex items-center px-6 py-3 rounded-full bg-white border border-slate-200 shadow-sm hover:border-orange-300 hover:shadow-md transition-all">
+                    <div class="bg-orange-50 p-2 rounded-full mr-3 text-orange-600">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-slate-600 font-medium">vranlee86@gmail.com</span>
+                </a>
+                <p class="text-slate-500 text-sm mt-2">Any questions or discussion are welcome! If like this work, a star 🌟 would be much appreciated!</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            <div class="font-bold text-xl text-slate-800 mb-2 flex items-center gap-2">
+                <i data-lucide="fish" class="w-5 h-5 text-orange-500"></i>
+                TIDE
+            </div>
+            <p class="text-slate-400 text-sm">© 2026 TIDE Team. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if(targetId === '#TODO') return; // Skip if TODO link
+                
+                e.preventDefault();
+                const element = document.querySelector(targetId);
+                if(element) {
+                    element.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
