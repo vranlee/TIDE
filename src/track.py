@@ -12,15 +12,15 @@ import motmetrics as mm
 import numpy as np
 import torch
 
-from tracker.multitracker import JDETracker
-from tracking_utils import visualization as vis
-from tracking_utils.log import logger
-from tracking_utils.timer import Timer
-from tracking_utils.evaluation import Evaluator
-import datasets.dataset.jde as datasets
+from lib.tracker.multitracker import JDETracker
+from lib.tracking_utils import visualization as vis
+from lib.tracking_utils.log import logger
+from lib.tracking_utils.timer import Timer
+from lib.tracking_utils.evaluation import Evaluator
+import lib.datasets.dataset.jde as datasets
 
-from tracking_utils.utils import mkdir_if_missing
-from opts import opts
+from lib.tracking_utils.utils import mkdir_if_missing
+from lib.opts import opts
 
 
 def write_results(filename, results, data_type):
@@ -45,32 +45,53 @@ def write_results(filename, results, data_type):
     logger.info('save results to {}'.format(filename))
 
 
-def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_image=True, frame_rate=30):
+def write_results_score(filename, results, data_type):
+    if data_type == 'mot':
+        save_format = '{frame},{id},{x1},{y1},{w},{h},{s},1,-1,-1,-1\n'
+    elif data_type == 'kitti':
+        save_format = '{frame} {id} pedestrian 0 0 -10 {x1} {y1} {x2} {y2} -10 -10 -10 -1000 -1000 -1000 -10\n'
+    else:
+        raise ValueError(data_type)
+
+    with open(filename, 'w') as f:
+        for frame_id, tlwhs, track_ids, scores in results:
+            if data_type == 'kitti':
+                frame_id -= 1
+            for tlwh, track_id, score in zip(tlwhs, track_ids, scores):
+                if track_id < 0:
+                    continue
+                x1, y1, w, h = tlwh
+                x2, y2 = x1 + w, y1 + h
+                line = save_format.format(frame=frame_id, id=track_id, x1=x1, y1=y1, x2=x2, y2=y2, w=w, h=h, s=score)
+                f.write(line)
+    logger.info('save results to {}'.format(filename))
+
+
+def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_image=True, frame_rate=30, use_cuda=True):
     if save_dir:
         mkdir_if_missing(save_dir)
     tracker = JDETracker(opt, frame_rate=frame_rate)
     timer = Timer()
     results = []
-    len_all = len(dataloader)
-    start_frame = int(len_all / 2)
-    frame_id = int(len_all / 2)
+    frame_id = 0
     for i, (path, img, img0) in enumerate(dataloader):
-        if i < start_frame:
-            continue
         if frame_id % 20 == 0:
             logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timer.average_time)))
 
         # run tracking
         timer.tic()
-        blob = torch.from_numpy(img).cuda().unsqueeze(0)
+        if use_cuda:
+            blob = torch.from_numpy(img).cuda().unsqueeze(0)
+        else:
+            blob = torch.from_numpy(img).unsqueeze(0)
         online_targets = tracker.update(blob, img0)
         online_tlwhs = []
         online_ids = []
+        #online_scores = []
         for t in online_targets:
             tlwh = t.tlwh
             tid = t.track_id
-            vertical = tlwh[2] / tlwh[3] > 1.6
-            if tlwh[2] * tlwh[3] > opt.min_box_area and not vertical:
+            if tlwh[2] * tlwh[3] > opt.min_box_area:
                 online_tlwhs.append(tlwh)
                 online_ids.append(tid)
         timer.toc()
@@ -82,7 +103,7 @@ def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_im
         if show_image:
             cv2.imshow('online_im', online_im)
         if save_dir is not None:
-            cv2.imwrite(os.path.join(save_dir, '{:05d}.PNG'.format(frame_id)), online_im)
+            cv2.imwrite(os.path.join(save_dir, '{:05d}.jpg'.format(frame_id)), online_im)
         frame_id += 1
     # save results
     write_results(result_filename, results, data_type)
@@ -92,8 +113,7 @@ def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_im
 def main(opt, data_root='/data/MOT16/train', det_root=None, seqs=('MOT16-05',), exp_name='demo',
          save_images=False, save_videos=False, show_image=True):
     logger.setLevel(logging.INFO)
-    # result_root = os.path.join(data_root, '..', 'results', exp_name)
-    result_root = os.path.join('/data1/TIDE/EVALTXTS', 'TIDE-results', exp_name)
+    result_root = os.path.join(data_root, '..', 'results', exp_name)
     mkdir_if_missing(result_root)
     data_type = 'mot'
 
@@ -142,10 +162,39 @@ def main(opt, data_root='/data/MOT16/train', det_root=None, seqs=('MOT16-05',), 
 
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     opt = opts().init()
 
-    if opt.val_mft_edge or opt.test_mft_edge:
+    if not opt.val_mot16:
+        seqs_str = '''KITTI-13
+                      KITTI-17
+                      ADL-Rundle-6
+                      PETS09-S2L1
+                      TUD-Campus
+                      TUD-Stadtmitte'''
+        #seqs_str = '''TUD-Campus'''
+        data_root = os.path.join(opt.data_dir, 'MOT15/images/train')
+    else:
+        seqs_str = '''MOT16-02
+                      MOT16-04
+                      MOT16-05
+                      MOT16-09
+                      MOT16-10
+                      MOT16-11
+                      MOT16-13'''
+        data_root = os.path.join(opt.data_dir, 'MOT16/train')
+    if opt.test_mot16:
+        seqs_str = '''MOT16-01
+                      MOT16-03
+                      MOT16-06
+                      MOT16-07
+                      MOT16-08
+                      MOT16-12
+                      MOT16-14'''
+        #seqs_str = '''MOT16-01 MOT16-07 MOT16-12 MOT16-14'''
+        #seqs_str = '''MOT16-06 MOT16-08'''
+        data_root = os.path.join(opt.data_dir, 'MOT16/test')
+
+    if opt.val_MFT_Edge or opt.test_MFT_Edge:
         seqs_str = '''Cruise-01
                       Disturb-01
                       MSK-01
@@ -155,16 +204,24 @@ if __name__ == '__main__':
                       Normal-04
                       Normal-05
                       PF-01
-                      PT-01
-                      '''
-        data_root = os.path.join(opt.data_dir, 'mft_edge/images/train')
+                      PT-01'''
+        data_root = os.path.join(opt.data_dir, 'MFT_Edge/test')
+    if opt.val_mft25 or opt.test_mft25:
+        seqs_str = '''BT-002
+                      BT-004
+                      MSK-003
+                      PF-002
+                      SN-009
+                      SN-011
+                      SN-014'''
+        data_root = os.path.join(opt.data_dir, 'MFT25/test')
 
     seqs = [seq.strip() for seq in seqs_str.split()]
 
     main(opt,
          data_root=data_root,
          seqs=seqs,
-         exp_name='OUT',
+         exp_name='BASH--',
          show_image=False,
          save_images=False,
          save_videos=False)

@@ -1,0 +1,15 @@
+{
+    "root": "/data1/LWR/vranlee/DATASETS/MFT",
+    "train":
+    {
+        "MFT_Edge":"./data/MFT_Edge.train"
+    },
+    "test_emb":
+    {
+        "MFT_Edge":"./data/MFT_Edge.emb"
+    },
+    "test":
+    {
+        "MFT_Edge":"./data/MFT_Edge.val"
+    }
+}

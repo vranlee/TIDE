@@ -6,7 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 
 from .common import *
-
+from .swintransformer import SwinStage, PatchEmbed, PatchMerging
 
 class Detect(nn.Module):
     stride = None  # strides computed during build
@@ -63,7 +63,7 @@ def fill_fc_weights(layers):
 
 
 class Model(nn.Module):
-    def __init__(self, config='config/yolov5s.yaml', ch=3, nc=None, anchors=None):  # model, input channels, number of classes
+    def __init__(self, config='config/tidel.yaml', ch=3, nc=None, anchors=None):  # model, input channels, number of classes
         super(Model, self).__init__()
         print(config)
         if isinstance(config, dict):
@@ -111,7 +111,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                 pass
 
         n = max(round(n * gd), 1) if n > 1 else n  # depth gain
-        if m in [Conv, Bottleneck, SPP, DWConv, Focus, BottleneckCSP, C3, C3TR, DeConv, DeConvDCN]:
+        if m in [Conv, Bottleneck, SPP, DWConv, Focus, BottleneckCSP, C3, C3TR, DeConv, DeConvDCN, SwinStage, PatchEmbed, PatchMerging]:
             c1, c2 = ch[f], args[0]
             c2 = make_divisible(c2 * gw, 8)
 
@@ -142,10 +142,10 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
     return nn.Sequential(*layers), sorted(save)
 
 
-class PoseYOLOv5s(nn.Module):
+class PoseL(nn.Module):
     def __init__(self, heads, config_file):
         self.heads = heads
-        super(PoseYOLOv5s, self).__init__()
+        super(PoseL, self).__init__()
         self.backbone = Model(config_file)
         for head in sorted(self.heads):
             num_output = self.heads[head]
@@ -161,7 +161,6 @@ class PoseYOLOv5s(nn.Module):
 
     def forward(self, x):
         x = self.backbone(x)
-
         ret = {}
         for head in self.heads:
             ret[head] = self.__getattr__(head)(x)
@@ -171,14 +170,10 @@ class PoseYOLOv5s(nn.Module):
 def get_pose_net(num_layers, heads, head_conv):
     config_file = os.path.join(
         os.path.dirname(__file__),
-        'networks/config/yolov5s.yaml'
+        'networks/config/tidel.yaml'
     )
-    pretrained = os.path.join(
-        os.path.dirname(__file__),
-        '../../../models/yolov5s.pt'
-    )
-    model = PoseYOLOv5s(heads, config_file)
-    initialize_weights(model, pretrained)
+    model = PoseL(heads, config_file)
+    initialize_weights(model)
     return model
 
 

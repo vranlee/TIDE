@@ -1,9 +1,3 @@
-# ------------------------------------------------------------------------------
-# Portions of this code are from
-# CornerNet (https://github.com/princeton-vl/CornerNet)
-# Copyright (c) 2018, University of Michigan
-# Licensed under the BSD 3-Clause License
-# ------------------------------------------------------------------------------
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -111,7 +105,6 @@ def _reg_loss(regr, gt_regr, mask):
   regr_loss = nn.functional.smooth_l1_loss(regr, gt_regr, size_average=False)
   regr_loss = regr_loss / (num + 1e-4)
   return regr_loss
-
 
 class FocalLoss(nn.Module):
   '''nn.Module warpper for focal loss'''

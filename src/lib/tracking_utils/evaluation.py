@@ -53,15 +53,6 @@ class Evaluator(object):
             keep[match_js] = False
             trk_tlwhs = trk_tlwhs[keep]
             trk_ids = trk_ids[keep]
-        #match_is, match_js = mm.lap.linear_sum_assignment(iou_distance)
-        #match_is, match_js = map(lambda a: np.asarray(a, dtype=int), [match_is, match_js])
-        #match_ious = iou_distance[match_is, match_js]
-
-        #match_js = np.asarray(match_js, dtype=int)
-        #match_js = match_js[np.logical_not(np.isnan(match_ious))]
-        #keep[match_js] = False
-        #trk_tlwhs = trk_tlwhs[keep]
-        #trk_ids = trk_ids[keep]
 
         # get distance matrix
         iou_distance = mm.distances.iou_matrix(gt_tlwhs, trk_tlwhs, max_iou=0.5)

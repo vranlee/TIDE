@@ -1369,9 +1369,19 @@ class FastViT(nn.Module):
 
         self.network = nn.ModuleList(network)
 
+        # add 1x1
+        # conv1x1 = nn.Sequential(nn.Conv2d(512, 64, kernel_size=1, stride=1, padding=0, bias=False))
+        # add  1x1
+        # network.append(conv1x1)
+
         for head in self.heads:
             classes = self.heads[head]
             if head_conv > 0:
+
+                # # add 1x1
+                # conv1x1 = nn.Sequential(nn.Conv2d(512, 64, kernel_size=1, stride=1, padding=0, bias=False))
+                # # add  1x1
+                # network.append(conv1x1)
 
                 fc = nn.Sequential(
                     nn.Conv2d(512, 64, kernel_size=3, stride=1, padding=1),
@@ -1518,15 +1528,33 @@ class FastViT(nn.Module):
         # through backbone
         x = self.forward_tokens(x)
 
+        # print('#############TEST#############')
+        # print(x.shape)
+        # print('#############TEST#############')
+
         if self.fork_feat:
             # output features of four stages for dense prediction
             return x
+
+        # for image classification
+        # x = self.conv_exp(x)
+        # x = self.gap(x)
+        # x = x.view(x.size(0), -1)
+
+        # cls_out = self.head(x)
+        # return cls_out
+
+        # print('#############TEST#############')
+        # print(x.shape)
+        # print('#############TEST#############')
 
         # # add
         ret = {}
         for head in self.heads:
             ret[head] = self.__getattr__(head)(x)
-
+        # print('#############TEST#############')
+        # print(ret)
+        # print('#############TEST#############')
         return [ret]
 
 
@@ -1692,6 +1720,26 @@ def fastvit_ma36(pretrained=False, **kwargs):
     if pretrained:
         raise ValueError("Functionality not implemented.")
     return model
+
+# def get_pose_net(num_layers, heads, head_conv=256, down_ratio=4):     # fastvit_sa24
+#     """Instantiate FastViT-SA24 model variant."""
+#     layers = [4, 4, 12, 4]
+#     embed_dims = [64, 128, 256, 512]
+#     mlp_ratios = [4, 4, 4, 4]
+#     downsamples = [True, True, True, True]
+#     pos_embs = [None, None, None, partial(RepCPE, spatial_shape=(7, 7))]
+#     token_mixers = ("repmixer", "repmixer", "repmixer", "attention")
+#     heads=heads
+#     model = FastViT(
+#         layers,
+#         token_mixers=token_mixers,
+#         embed_dims=embed_dims,
+#         pos_embs=pos_embs,
+#         mlp_ratios=mlp_ratios,
+#         downsamples=downsamples,
+#         heads=heads #add
+#     )
+#     return model
 
 def get_pose_net(num_layers, heads, head_conv=256, down_ratio=4):
     """Instantiate FastViT-MA36 model variant."""

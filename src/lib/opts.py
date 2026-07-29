@@ -14,8 +14,6 @@ class opts(object):
         self.parser.add_argument('--dataset', default='jde', help='jde')
         self.parser.add_argument('--exp_id', default='default')
         self.parser.add_argument('--test', action='store_true')
-        # self.parser.add_argument('--load_model', default='../models/ctdet_coco_dla_2x.pth',
-        # help='path to pretrained model')
         self.parser.add_argument('--load_model', default='',
                                  help='path to pretrained model')
         self.parser.add_argument('--resume', action='store_true',
@@ -24,9 +22,6 @@ class opts(object):
                                       'set load_model to model_last.pth '
                                       'in the exp dir if load_model is empty.')
 
-        # system
-        # self.parser.add_argument('--gpus', default='0, 1',
-        #                          help='-1 for CPU, use comma for multiple gpus')
         self.parser.add_argument('--gpus', default='0',
                                  help='-1 for CPU, use comma for multiple gpus')
         self.parser.add_argument('--num_workers', type=int, default=0,
@@ -50,9 +45,9 @@ class opts(object):
 
         # model
         self.parser.add_argument('--arch', default='dla_34',
-                                 help='model architecture. Currently tested'
-                                      'resdcn_34 | resdcn_50 | resfpndcn_34 |'
-                                      'dla_34 | hrnet_18')
+                                                                 help='model architecture. Currently tested '
+                                                                            'tides | tidel | resdcn_34 | resdcn_50 | '
+                                                                            'resfpndcn_34 | dla_34 | hrnet_18')
         self.parser.add_argument('--head_conv', type=int, default=-1,
                                  help='conv layer channels for output head'
                                       '0 for no conv layer'
@@ -117,15 +112,15 @@ class opts(object):
         self.parser.add_argument('--val_mot20', default=False, help='val mot20')
         self.parser.add_argument('--test_mot20', default=False, help='test mot20')
 
-        self.parser.add_argument('--val_mft_edge', default=False, help='val mft_edge')
-        self.parser.add_argument('--test_mft_edge', default=False, help='test mft_edge')
+        self.parser.add_argument('--val_MFT_Edge', default=False, help='val MFT_Edge')
+        self.parser.add_argument('--test_MFT_Edge', default=False, help='test MFT_Edge')
+        self.parser.add_argument('--val_mft25', default=False, help='val mft25')
+        self.parser.add_argument('--test_mft25', default=False, help='test mft25')       
 
         self.parser.add_argument('--val_hie', default=False, help='val hie')
         self.parser.add_argument('--test_hie', default=False, help='test hie')
-        self.parser.add_argument('--conf_thres', type=float, default=0.4, help='confidence thresh for tracking') # First Asso (Hungarian)
-        self.parser.add_argument('--det_thres', type=float, default=0.3, help='confidence thresh for detection')
-        self.parser.add_argument('--nms_thres', type=float, default=0.4, help='iou thresh for nms')
-        self.parser.add_argument('--track_buffer', type=int, default=30, help='tracking buffer')
+        self.parser.add_argument('--nms_thres', type=float, default=0.7, help='iou thresh for nms') #0.4
+        self.parser.add_argument('--track_buffer', type=int, default=30, help='tracking buffer') #30
         self.parser.add_argument('--min-box-area', type=float, default=100, help='filter out tiny boxes')
         self.parser.add_argument('--input-video', type=str,
                                  default='../videos/MOT16-03.mp4',
@@ -137,7 +132,7 @@ class opts(object):
         self.parser.add_argument('--data_cfg', type=str,
                                  default='../src/lib/cfg/data.json',
                                  help='load data from cfg')
-        self.parser.add_argument('--data_dir', type=str, default='/data3/username/DATASETS/JDE')
+        self.parser.add_argument('--data_dir', type=str, default='/data3/testdata/vranlee/DATASETS/JDE')
 
         # loss
         self.parser.add_argument('--mse_loss', action='store_true',
@@ -173,16 +168,14 @@ class opts(object):
                                  help='category specific bounding box size.')
         self.parser.add_argument('--not_reg_offset', action='store_true',
                                  help='not regress local offset.')
-        self.parser.add_argument("--match_thresh", type=float, default=0.8, help="matching threshold for tracking")
 
-        self.parser.add_argument("--track_high_thresh", type=float, default=0.6, help="tracking confidence threshold")
-        self.parser.add_argument("--track_low_thresh", default=0.1, type=float, help="lowest detection threshold valid for tracks")
-        self.parser.add_argument("--new_track_thresh", default=0.7, type=float, help="new track thresh")
+        self.parser.add_argument('--det_thres', type=float, default=0.5, help='confidence thresh for detection') # 0.5
+        self.parser.add_argument('--conf_thres', type=float, default=0.4, help='confidence thresh for tracking') # 0.4
+        self.parser.add_argument("--match_thresh", type=float, default=0.8, help="matching threshold for tracking") # 0.8
+        self.parser.add_argument("--match_thresh_iou_s3", type=float, default=0.5, help="matching threshold for tracking") # 0.5
+        self.parser.add_argument("--match_thresh_iou_s3_low", type=float, default=0.4, help="matching threshold for tracking") # 0.4
+        self.parser.add_argument("--match_thresh_iou_unconfirmed", type=float, default=0.7, help="matching threshold for tracking") # 0.7
 
-        self.parser.add_argument("--aspect_ratio_thresh", type=float, default=1.6, help="threshold for filtering out boxes of which aspect ratio are above the given value.")
-        self.parser.add_argument('--min_box_area', type=float, default=10, help='filter out tiny boxes')
-
- 
     def parse(self, args=''):
         if args == '':
             opt = self.parser.parse_args()

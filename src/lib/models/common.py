@@ -1,5 +1,3 @@
-# YOLOv5 common modules
-
 import math
 from copy import copy
 from pathlib import Path
@@ -277,72 +275,65 @@ class C3TR(C3):
 
 class GroupBatchnorm2d(nn.Module):
     def __init__(self, c_num:int, group_num:int = 16, eps:float = 1e-10):
-        super(GroupBatchnorm2d,self).__init__()  # Call parent class constructor
-        assert c_num >= group_num  # Assert c_num is greater than or equal to group_num
-        self.group_num  = group_num  # Set number of groups
-        self.gamma      = nn.Parameter(torch.randn(c_num, 1, 1))  # Create trainable parameter gamma
-        self.beta       = nn.Parameter(torch.zeros(c_num, 1, 1))  # Create trainable parameter beta
-        self.eps        = eps  # Set small constant eps for numerical stability
+        super(GroupBatchnorm2d,self).__init__()  
+        assert c_num >= group_num  
+        self.group_num  = group_num  
+        self.gamma      = nn.Parameter(torch.randn(c_num, 1, 1)) 
+        self.beta       = nn.Parameter(torch.zeros(c_num, 1, 1))  
+        self.eps        = eps  
 
     def forward(self, x):
-        N, C, H, W  = x.size()  # Get input tensor dimensions
-        x           = x.view(N, self.group_num, -1)  # Reshape input tensor to specified shape
-        mean        = x.mean(dim=2, keepdim=True)  # Calculate mean for each group
-        std         = x.std(dim=2, keepdim=True)  # Calculate standard deviation for each group
-        x           = (x - mean) / (std + self.eps)  # Apply batch normalization
-        x           = x.view(N, C, H, W)  # Restore original shape
-        return x * self.gamma + self.beta  # Return normalized tensor
+        N, C, H, W  = x.size()  
+        x           = x.view(N, self.group_num, -1)  
+        mean        = x.mean(dim=2, keepdim=True) 
+        std         = x.std(dim=2, keepdim=True)  
+        x           = (x - mean) / (std + self.eps)  
+        x           = x.view(N, C, H, W)  
+        return x * self.gamma + self.beta  
 
-# Custom SRU (Spatial and Reconstruct Unit) class
 class SRU(nn.Module):
     def __init__(self,
-                 oup_channels:int,  # Output channels
-                 group_num:int = 16,  # Number of groups, default 16
-                 gate_treshold:float = 0.5,  # Gate threshold, default 0.5
-                 torch_gn:bool = False  # Whether to use PyTorch's built-in GroupNorm, default False
+                 oup_channels:int,  
+                 group_num:int = 16,  
+                 gate_treshold:float = 0.5,  
+                 torch_gn:bool = False  
                  ):
-        super().__init__()  # Call parent class constructor
-
-         # Initialize GroupNorm layer or custom GroupBatchnorm2d layer
+        super().__init__()  
         self.gn = nn.GroupNorm(num_channels=oup_channels, num_groups=group_num) if torch_gn else GroupBatchnorm2d(c_num=oup_channels, group_num=group_num)
-        self.gate_treshold  = gate_treshold  # Set gate threshold
-        self.sigomid        = nn.Sigmoid()  # Create sigmoid activation function
+        self.gate_treshold  = gate_treshold  
+        self.sigomid        = nn.Sigmoid()  
 
     def forward(self, x):
-        gn_x        = self.gn(x)  # Apply group batch normalization
-        w_gamma     = self.gn.gamma / sum(self.gn.gamma)  # Calculate gamma weights
-        reweights   = self.sigomid(gn_x * w_gamma)  # Calculate importance weights
+        gn_x        = self.gn(x)  
+        w_gamma     = self.gn.gamma / sum(self.gn.gamma)  
+        reweights   = self.sigomid(gn_x * w_gamma)  
 
-        # Gate mechanism
-        info_mask    = reweights >= self.gate_treshold  # Calculate information gate mask
-        noninfo_mask = reweights < self.gate_treshold  # Calculate non-information gate mask
-        x_1          = info_mask * x  # Use information gate mask
-        x_2          = noninfo_mask * x  # Use non-information gate mask
-        x            = self.reconstruct(x_1, x_2)  # Reconstruct features
+        info_mask    = reweights >= self.gate_treshold  
+        noninfo_mask = reweights < self.gate_treshold  
+        x_1          = info_mask * x  
+        x_2          = noninfo_mask * x  
+        x            = self.reconstruct(x_1, x_2) 
         return x
 
     def reconstruct(self, x_1, x_2):
-        x_11, x_12 = torch.split(x_1, x_1.size(1) // 2, dim=1)  #
+        x_11, x_12 = torch.split(x_1, x_1.size(1) // 2, dim=1)  
         x_21, x_22 = torch.split(x_2, x_2.size(1) // 2, dim=1)  
-        return torch.cat([x_11 + x_22, x_12 + x_21], dim=1)  # Reconstruct features and connect
-
+        return torch.cat([x_11 + x_22, x_12 + x_21], dim=1) 
 
 class CRU(nn.Module):
     def __init__(self, op_channel:int, alpha:float = 1/2, squeeze_radio:int = 2, group_size:int = 2, group_kernel_size:int = 3):
-        super().__init__()  # Call parent class constructor
+        super().__init__() 
 
-        self.up_channel     = up_channel = int(alpha * op_channel)  # Calculate upper channel number
-        self.low_channel    = low_channel = op_channel - up_channel  # Calculate lower channel number
-        self.squeeze1       = nn.Conv2d(up_channel, up_channel // squeeze_radio, kernel_size=1, bias=False)  # Create convolution layer
-        self.squeeze2       = nn.Conv2d(low_channel, low_channel // squeeze_radio, kernel_size=1, bias=False)  # Create convolution layer
+        self.up_channel     = up_channel = int(alpha * op_channel) 
+        self.low_channel    = low_channel = op_channel - up_channel 
+        self.squeeze1       = nn.Conv2d(up_channel, up_channel // squeeze_radio, kernel_size=1, bias=False)  
+        self.squeeze2       = nn.Conv2d(low_channel, low_channel // squeeze_radio, kernel_size=1, bias=False) 
 
-        # Upper feature transformation
-        self.GWC            = nn.Conv2d(up_channel // squeeze_radio, op_channel, kernel_size=group_kernel_size, stride=1, padding=group_kernel_size // 2, groups=group_size)  # Create convolution layer
-        self.PWC1           = nn.Conv2d(up_channel // squeeze_radio, op_channel, kernel_size=1, bias=False)  # Create convolution layer
+        self.GWC            = nn.Conv2d(up_channel // squeeze_radio, op_channel, kernel_size=group_kernel_size, stride=1, padding=group_kernel_size // 2, groups=group_size) 
+        self.PWC1           = nn.Conv2d(up_channel // squeeze_radio, op_channel, kernel_size=1, bias=False) 
 
-        # Lower feature transformation
-        self.PWC2           = nn.Conv2d(low_channel // squeeze_radio, op_channel - low_channel // squeeze_radio, kernel_size=1, bias=False)  # Create convolution layer
-        self.advavg         = nn.AdaptiveAvgPool2d(1) 
+        self.PWC2           = nn.Conv2d(low_channel // squeeze_radio, op_channel - low_channel // squeeze_radio, kernel_size=1, bias=False) 
+        self.advavg         = nn.AdaptiveAvgPool2d(1)
 
     def forward(self, x):
 
@@ -352,8 +343,8 @@ class CRU(nn.Module):
 
         Y1 = self.GWC(up) + self.PWC1(up)
 
-        Y2 = torch.cat([self.PWC2(low), low], dim=1)
 
+        Y2 = torch.cat([self.PWC2(low), low], dim=1)
 
         out = torch.cat([Y1, Y2], dim=1)
         out = F.softmax(self.advavg(out), dim=1) * out
@@ -362,24 +353,25 @@ class CRU(nn.Module):
 
 import torch.nn.functional as F
 
+
 class ScConv(nn.Module):
     def __init__(self, op_channel:int, group_num:int = 16, gate_treshold:float = 0.5, alpha:float = 1/2, squeeze_radio:int = 2, group_size:int = 2, group_kernel_size:int = 3):
-        super().__init__() 
+        super().__init__()  
 
         self.SRU = SRU(op_channel, group_num=group_num, gate_treshold=gate_treshold)  
-        self.CRU = CRU(op_channel, alpha=alpha, squeeze_radio=squeeze_radio, group_size=group_size, group_kernel_size=group_kernel_size)  
+        self.CRU = CRU(op_channel, alpha=alpha, squeeze_radio=squeeze_radio, group_size=group_size, group_kernel_size=group_kernel_size) 
 
     def forward(self, x):
         x = self.SRU(x) 
-        x = self.CRU(x) 
+        x = self.CRU(x)  
         return x
 
 class CsConv(nn.Module):
     def __init__(self, op_channel:int, group_num:int = 16, gate_treshold:float = 0.5, alpha:float = 1/2, squeeze_radio:int = 2, group_size:int = 2, group_kernel_size:int = 3):
-        super().__init__() 
+        super().__init__()  
 
-        self.SRU = SRU(op_channel, group_num=group_num, gate_treshold=gate_treshold)  
-        self.CRU = CRU(op_channel, alpha=alpha, squeeze_radio=squeeze_radio, group_size=group_size, group_kernel_size=group_kernel_size)  
+        self.SRU = SRU(op_channel, group_num=group_num, gate_treshold=gate_treshold) 
+        self.CRU = CRU(op_channel, alpha=alpha, squeeze_radio=squeeze_radio, group_size=group_size, group_kernel_size=group_kernel_size)
 
     def forward(self, x):
         x = self.CRU(x)  

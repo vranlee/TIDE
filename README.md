@@ -1,11 +1,11 @@
 <div align="center">
 
-# When Fish Look Alike: Tracking Identities with Dual-branch Elasticity (TIDE)
+# When Fish Look Alike: Tracking Identities with Dual-branch Elasticity
 
-**The official implementation of the paper:**
-> [**When Fish Look Alike: Tracking Identities with Dual-branch Elasticity**](##TODO:LINK_TO_PAPER##)  
-> ***anonymous***
-> ### [📄 Paper](##TODO:LINK_TO_PAPER##) | [💻 Code](***anonymous***) | [📊 Datasets](***anonymous***)
+The official implementation of the paper：
+>  [**When Fish Look Alike: Tracking Identities with Dual-branch Elasticity**](https://vranlee.github.io/TIDE/)  
+>  Vran Lee, Xin Liu, Yijie Wei, Yeqiang Liu, Hwa Liang Leo, Zhenbo Li*
+>  [**\[Project\]**](https://vranlee.github.io/TIDE/) [**\[Paper\]**](#TODO) [**\[Code\]**](https://github.com/vranlee/TIDE)
 
 </div>
 
@@ -20,58 +20,70 @@
 ---
 
 <p align="center">
-  For questions, please contact us at <code>**anonymous**</code> or <code>**anonymous**</code>.
+  
+> Contact: vranlee86@gmail.com. Any questions or discussion are welcome!
+> 
+> If like this work, a star 🌟 would be much appreciated!
+
+-----
 </p>
 
 
 ## 🚀 Updates
-- **[2026.03]** Updates info not available during **Anonymous** review*
-
-## ✨ Abstract
-Tracking fish in dense aquaculture environments poses significant challenges due to minimal inter-individual variance, rapid morphological deformations, and frequent occlusions. Recent state-of-the-art methods push accuracy boundaries by employing heavy Separated Detection and Embedding (SDE) paradigms alongside complex association metrics. However, their exorbitant computational overhead prohibits real-time deployment on edge devices. To bridge the gap between academic benchmarks and resource-constrained industrial deployment, we propose TIDE, a framework for Tracking Identities with Dual-branch Elasticity based on a Joint Detection and Embedding (JDE) paradigm. TIDE offers scalable architectural configurations to flexibly address diverse hardware constraints under a unified design philosophy. Furthermore, we introduce the Adaptive Geometric Correspondence IoU (AGCIoU). This minimalistic association mechanism circumvents the need for computationally expensive re-identification modules and complex morphological metrics. Instead, it leverages robust spatial and geometric cues to effectively maintain identities through severe occlusions with minimal overhead. Extensive evaluations on challenging stress-test datasets demonstrate that TIDE establishes a superior accuracy-efficiency trade-off. Specifically, the framework achieves highly competitive tracking accuracy with a Higher Order Tracking Accuracy (HOTA) score of 28.43 while operating at a remarkably efficient 20.47G FLOPs. This exceptional efficiency represents a 38.7-fold computational reduction compared to standard heavy-backbone MOT trackers, proving its viability for real-world edge deployment.
+- **[2026.07]** Updates Repo.
 
 ## 🏆 Key Contributions
-*   We propose *TIDE*, a computationally elastic JDE framework. It features scalable deployment configurations to flexibly balance tracking accuracy against specific hardware constraints.
-*   We introduce the *Adaptive Geometric Correspondence IoU (AGCIoU)*. As a minimalist alternative to heavy Re-ID networks, it maintains robust identity consistency during severe occlusions using only spatial and geometric cues.
-*   We validate TIDE on the specialized *MFT-Edge* stress-test benchmark. The framework achieves a competitive HOTA of 28.43 at just 20.47G FLOPs. This *38.7-fold* computational reduction over standard heavy-backbone trackers proves its viability for industrial edge deployment.
+*   **Dual-Branch Elastic Framework**: We propose *TIDE*, a highly efficient JDE framework that effectively resolves the computational bottlenecks of tracking dense, homogeneous targets. It provides a scalable dual-branch design to accommodate diverse hardware constraints.
+*   **Minimalist Geometric Association**: We introduce *AGCIoU*, a geometric association metric that maintains robust ID consistency under severe non-rigid deformations and occlusions, completely avoiding the substantial overhead of heavy appearance models.
+*   **Superior Accuracy-Efficiency Balance**: Extensive evaluations demonstrate the framework's exceptional accuracy-efficiency trade-off on the MFT-Edge benchmark. The lightweight *TIDE-L* achieves a competitive HOTA of 28.43 while reducing computational cost by 38.7-fold compared to standard heavy trackers, directly proving its viability for industrial edge deployment.
 
 ## 📊 Tracking Performance
 
 ### State-of-the-Art Comparison on MFT-Edge Dataset
 
-| Method                 | Params ↓   | FLOPs ↓   | HOTA ↑   | IDF1 ↑   | MOTA ↑   | IDs ↓   |
+| Method | Params ↓ | FLOPs ↓ | HOTA ↑ | IDF1 ↑ | MOTA ↑ | IDs ↓ |
 |------------------------|------------|-----------|----------|----------|----------|---------|
-| SORT†                  | 99.00M     | 793.21G   | 22.73    | 23.91    | 48.67    | 2599    |
-| ByteTrack†             | 99.00M     | 793.21G   | 19.18    | 19.37    | 40.17    | 2325    |
-| OC-SORT†               | 99.00M     | 793.21G   | 22.99    | 24.14    | 48.44    | 2674    |
-| FairMOT                | 16.55M     | 72.93G    | 27.26    | 29.68    | 60.74    | 2456    |
-| CMFTNet                | 45.08M     | 137.77G   | 27.08    | 29.93    | **61.90**| 2716    |
-| TrackFormer            | 42.95M     | 143.43G   | 26.51    | 26.73    | 43.42    | 899     |
-| **TIDE-L (Ours)**      | **5.79M**  | **20.47G**| 28.43    | 36.29    | 47.84    | 574     |
-| **TIDE-S (Ours)**      | 32.59M     | 90.13G    | **29.98**| **39.01**| 54.74    | 908     |
+| SORT† | 99.00M | 793.21G | 22.73 | 23.91 | 48.67 | 2599 |
+| ByteTrack† | 99.00M | 793.21G | 19.18 | 19.37 | 40.17 | 2325 |
+| OC-SORT† | 99.00M | 793.21G | 22.99 | 24.14 | 48.44 | 2674 |
+| FairMOT | 16.55M | 72.93G | 27.26 | 29.68 | 60.74 | 2456 |
+| CMFTNet | 45.08M | 137.77G | 27.08 | 29.93 | 61.90 | 2716 |
+| TrackFormer | 42.95M | 143.43G | 26.51 | 26.73 | 43.42 | 899 |
+| SU-T | 99.00M | 793.21G | **34.41**| **40.50**| **68.52**| 1902 |
+| **TIDE-L (Ours)** | **5.79M** | **20.47G**| 28.43 | 36.29 | 47.84 | 574 |
+| **TIDE-S (Ours)** | 32.59M | 90.13G | 29.98 | 39.01 | 54.74 | 908 |
 
 <details>
 <summary><b>Click to see the full comparison table</b></summary>
 
-| **Methods**           | **Params ↓** | **FLOPs ↓** | **HOTA ↑** | **IDF1 ↑** | **IDP ↑** | **IDR ↑** | **DetRe ↑** | **DetPr ↑** | **IDs ↓** | **MOTA ↑** | **MOTP ↑** |
+*Note: The best results are highlighted in **bold**, and the second-best results are <u>underlined</u>.*
+
+| **Methods** | **Params ↓** | **FLOPs ↓** | **HOTA ↑** | **IDF1 ↑** | **IDP ↑** | **IDR ↑** | **DetRe ↑** | **DetPr ↑** | **IDs ↓** | **MOTA ↑** | **MOTP ↑** |
 |-----------------------|--------------|-------------|------------|------------|-----------|-----------|-------------|-------------|-----------|------------|------------|
-| SORT†                 | 99.00M       | 793.21G     | 22.73      | 23.91      | 29.09     | 20.29     | 44.66       | 64.03       | 2599      | 48.67      | 72.01      |
-| ByteTrack†            | 99.00M       | 793.21G     | 19.18      | 19.37      | 26.11     | 15.40     | 35.66       | 60.46       | 2325      | 40.17      | 67.99      |
-| OC-SORT†              | 99.00M       | 793.21G     | 22.99      | 24.14      | 29.28     | 20.54     | 44.84       | 63.92       | 2674      | 48.44      | 72.17      |
-| HybridSORT†           | 99.00M       | 793.21G     | 15.89      | 17.29      | **56.77** | 10.20     | 11.79       | 65.58       | **214**   | 14.23      | 71.64      |
-| QDTrack               | 57.20M       | 32.02G      | 25.27      | 24.49      | 27.74     | 21.93     | **53.70**   | 67.92       | 9103      | 42.81      | 75.34      |
-| FairMOT               | 16.55M       | 72.93G      | 27.26      | 29.68      | 36.56     | 24.98     | 46.71       | **68.36**   | 2456      | 60.74      | 69.59      |
-| CMFTNet               | 45.08M       | 137.77G     | 27.08      | 29.93      | 36.35     | 25.43     | 47.52       | 67.93       | 2716      | **61.90**  | 69.47      |
-| TrackFormer           | 42.95M       | 143.43G     | 26.51      | 26.73      | 35.69     | 21.36     | 42.04       | 70.23       | 899       | 43.42      | **76.00**  |
-| CenterTrack           | 16.67M       | 61.36G      | 22.49      | 23.39      | 30.90     | 18.81     | 35.11       | 57.67       | 1032      | 26.68      | 68.48      |
-| TransCenter           | 30.66M       | 133.09G     | 27.20      | 29.48      | 37.05     | 24.48     | 38.22       | 57.85       | 597       | 24.69      | 73.83      |
-| TFMFT                 | 39.93M       | 215.27G     | 21.88      | 26.74      | 45.55     | 18.92     | 29.72       | 71.54       | 945       | 35.65      | 74.89      |
-| **TIDE-L (Ours)**     | **5.79M**    | **20.47G**  | 28.43      | 36.29      | 49.44     | 28.67     | 37.34       | 64.41       | 574       | 47.84      | 67.17      |
-| **TIDE-S (Ours)**     | 32.59M       | 90.13G      | **29.98**  | **39.01**  | 47.87     | **32.92** | 42.86       | 62.32       | 908       | 54.74      | 65.82      |
+| SORT† | 99.00M | 793.21G | 22.73 | 23.91 | 29.09 | 20.29 | 44.66 | 64.03 | 2599 | 48.67 | 72.01 |
+| ByteTrack† | 99.00M | 793.21G | 19.18 | 19.37 | 26.11 | 15.40 | 35.66 | 60.46 | 2325 | 40.17 | 67.99 |
+| OC-SORT† | 99.00M | 793.21G | 22.99 | 24.14 | 29.28 | 20.54 | 44.84 | 63.92 | 2674 | 48.44 | 72.17 |
+| HybridSORT† | 99.00M | 793.21G | 15.89 | 17.29 | **56.77** | 10.20 | 11.79 | 65.58 | **214** | 14.23 | 71.64 |
+| QDTrack | 57.20M | <u>32.02G</u> | 25.27 | 24.49 | 27.74 | 21.93 | <u>53.70</u> | 67.92 | 9103 | 42.81 | <u>75.34</u> |
+| FairMOT | <u>16.55M</u> | 72.93G | 27.26 | 29.68 | 36.56 | 24.98 | 46.71 | 68.36 | 2456 | 60.74 | 69.59 |
+| CMFTNet | 45.08M | 137.77G | 27.08 | 29.93 | 36.35 | 25.43 | 47.52 | 67.93 | 2716 | <u>61.90</u> | 69.47 |
+| TrackFormer | 42.95M | 143.43G | 26.51 | 26.73 | 35.69 | 21.36 | 42.04 | <u>70.23</u> | 899 | 43.42 | **76.00** |
+| CenterTrack | 16.67M | 61.36G | 22.49 | 23.39 | 30.90 | 18.81 | 35.11 | 57.67 | 1032 | 26.68 | 68.48 |
+| TransCenter | 30.66M | 133.09G | 27.20 | 29.48 | 37.05 | 24.48 | 38.22 | 57.85 | 597 | 24.69 | 73.83 |
+| TFMFT | 39.93M | 215.27G | 21.88 | 26.74 | 45.55 | 18.92 | 29.72 | **71.54** | 945 | 35.65 | 74.89 |
+| SU-T | 99.00M | 793.21G | **34.41** | **40.50** | 37.97 | **43.41** | **67.45** | 59.00 | 1902 | **68.52** | 71.81 |
+| **TIDE-L (Ours)** | **5.79M** | **20.47G** | 28.43 | 36.29 | <u>49.44</u> | 28.67 | 37.34 | 64.41 | <u>574</u> | 47.84 | 67.17 |
+| *$\Delta$ vs. SU-T* | *-94.1%* | *-97.4%* | *-17.4%* | *-10.4%* | *+30.2%* | *-33.9%* | *-44.6%* | *+9.2%* | *-69.8%* | *-30.2%* | *-6.5%* |
+| **TIDE-S (Ours)** | 32.59M | 90.13G | <u>29.98</u> | <u>39.01</u> | 47.87 | <u>32.92</u> | 42.86 | 62.32 | 908 | 54.74 | 65.82 |
+| *$\Delta$ vs. SU-T* | *-67.1%* | *-88.6%* | *-12.9%* | *-3.7%* | *+26.1%* | *-24.2%* | *-36.5%* | *+5.6%* | *-52.3%* | *-20.1%* | *-8.3%* |
 
 </details>
 
-*Notes: † indicates SDE-based methods using shared weights. -S/-L denote the Scalable and Lightweight branches of TIDE, respectively.*
+## 🧐 Prerequisites
+- CUDA >= 11.0
+- Python >= 3.8
+- PyTorch >= 1.7.0
+- Ubuntu 18.04 or later (Windows is also supported but may require additional setup)
 
 ## 🔧 Installation
 
@@ -82,23 +94,38 @@ Tracking fish in dense aquaculture environments poses significant challenges due
    conda env create -f requirements.yaml
    conda activate TIDE
    ```
++ **Step.3** Perparing datasets.
 
-## Exps.
-* Download *MFT_Edge* or utilize your datasets for test.
-
+  e.g. Download [MFT_Edge](https://pan.baidu.com/s/1o1tBsusM9VxSxmz--IzldQ?pwd=wfeq) for test (utilize [MFT25](https://vranlee.github.io/SU-T/) or your own datasets as well.)
+  
+## 🏋️ Training Sample
+  ```python
+  python train.py cmot \
+  --exp_id YOUR-EXP-NAMES --data_cfg '../src/lib/cfg/mft_edge.json' \
+  --lr 5e-4 --batch_size 16 --wh_weight 0.5 \
+  --arch 'tides/tidel' --num_epochs 30 --reid_dim 64
   ```
-  sh experiments/exp.sh
+
+
+## 🧪 Testing Sample
+  ```python
+  python track.py cmot \
+  --val_MFT_Edge True \
+  --data_dir /DATASETS/MFT \
+  --load_model ../exp/cmot/YOUR-EXP-NAMES/model_best.pth \
+  --arch 'tides/tidel' \ 
+  --conf_thres 0.4
   ```
 
-## 📦 Pretrained Models
-Our pretrained models can be downloaded from: *Links are not available during **Anonymous** review*
+## 🔗 Pretrained Models
+Our [pretrained models](https://pan.baidu.com/s/10yF69NL-A_uOCsu_prcMzw?pwd=v57h) can be downloaded from: [**[BaiduYun: v57h]**](https://pan.baidu.com/s/10yF69NL-A_uOCsu_prcMzw?pwd=v57h)
 
-## 📦 Datasets
-*MFT_Edge* can be downloaded from: *Links are not available during **Anonymous** review*
+## 🔗 Datasets
+[MFT_Edge](https://pan.baidu.com/s/1o1tBsusM9VxSxmz--IzldQ?pwd=wfeq) dataset can be downloaded from: [**[BaiduYun: wfeq]**](https://pan.baidu.com/s/1o1tBsusM9VxSxmz--IzldQ?pwd=wfeq)
 
 
 ## 🙏 Acknowledgements
-*Acknowledgements are Not available during **Anonymous** review*
+A large part of the code is borrowed from [sompt22](https://github.com/sompt22/CountingMOT), [apple](https://github.com/apple/ml-fastvit), and [ultralytics](https://github.com/ultralytics/ultralytics). Thanks for their wonderful works!
 
 ## 📜 Citation
-*Citation are Not available during **Anonymous** review*
+*Citation is available once the arXiv ver. released.*

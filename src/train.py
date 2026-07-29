@@ -19,7 +19,6 @@ from lib.trains.train_factory import train_factory
 import numpy as np
 import random
 
-from thop import profile
 def setup_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
@@ -52,16 +51,9 @@ def main(opt):
     print('Creating model...')
     model = create_model(opt.arch, opt.heads, opt.head_conv)
 
-    # Calculate model complexity (FLOPs and parameters)
-    net = model
-    inputs = torch.randn(1, 3, 224, 224)
-    flops, params = profile(net, (inputs,))
-    print('flops: ', flops, 'params: ', params)
-
     optimizer = torch.optim.Adam(model.parameters(), opt.lr)
     start_epoch = 0
 
-    # Get dataloader
     train_loader = torch.utils.data.DataLoader(
         dataset,
         batch_size=opt.batch_size,
@@ -102,13 +94,11 @@ def main(opt):
             print('Drop LR to', lr)
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
-        # Save model every 10 epochs
         if epoch % 10 == 0:
             save_model(os.path.join(opt.save_dir, 'model_{}.pth'.format(epoch)),
                        epoch, model, optimizer)
     logger.close()
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0, 1'
     opt = opts().parse()
     main(opt)

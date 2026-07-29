@@ -252,25 +252,23 @@ class JDETracker(object):
         self.model = self.model.to(opt.device)
         self.model.eval()
 
-        self.tracked_stracks = []  # type: list[STrack] # List of currently tracked trajectories
-        self.lost_stracks = []  # type: list[STrack] # List of temporarily lost trajectories
-        self.removed_stracks = []  # type: list[STrack] # List of removed trajectories
-
-        # BaseTrack.clear_count()
-
-        self.frame_id = 0   # Current frame counter
-        # self.det_thresh = opt.conf_thres
-        self.det_thresh = opt.conf_thres + 0.1  # Detection confidence threshold
-        self.buffer_size = int(frame_rate / 30.0 * opt.track_buffer)    # Size of tracking buffer
-        self.max_time_lost = self.buffer_size   # Maximum frames a trajectory can be lost before removal
-        self.max_per_image = opt.K  # Maximum number of trajectories to keep per image
-        self.mean = np.array(opt.mean, dtype=np.float32).reshape(1, 1, 3)   # Mean for input image normalization
-        self.std = np.array(opt.std, dtype=np.float32).reshape(1, 1, 3) # Standard deviation for input image normalization
-
-        self.kalman_filter = KalmanFilter()    
+        self.tracked_stracks = [] 
+        self.lost_stracks = []  
+        self.removed_stracks = []  
 
 
-    def post_process(self, dets, meta):    
+
+        self.frame_id = 0   
+
+        self.det_thresh = opt.conf_thres + 0.1  
+        self.buffer_size = int(frame_rate / 30.0 * opt.track_buffer)    
+        self.max_time_lost = self.buffer_size  
+        self.max_per_image = opt.K 
+        self.mean = np.array(opt.mean, dtype=np.float32).reshape(1, 1, 3)  
+        self.std = np.array(opt.std, dtype=np.float32).reshape(1, 1, 3)
+
+        self.kalman_filter = KalmanFilter()   
+    def post_process(self, dets, meta):   
         dets = dets.detach().cpu().numpy()
         dets = dets.reshape(1, -1, dets.shape[2])
         dets = ctdet_post_process(
@@ -280,7 +278,7 @@ class JDETracker(object):
             dets[0][j] = np.array(dets[0][j], dtype=np.float32).reshape(-1, 5)
         return dets[0]
 
-    def merge_outputs(self, detections):       
+    def merge_outputs(self, detections):   
         results = {}
         for j in range(1, self.opt.num_classes + 1):
             results[j] = np.concatenate(
