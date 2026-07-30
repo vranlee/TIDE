@@ -30,7 +30,7 @@ The official implementation of the paper：
 
 
 ## 🚀 Updates
-- **[2026.07]** MFT-Edge Testset Eval has been released on Codabench!
+- **[2026.07]** MFT-Edge Testset Eval has been released on [Codabench](https://www.codabench.org/competitions/17711/)!
 - **[2026.07]** Updates Repo.
 
 ## 🏆 Key Contributions
