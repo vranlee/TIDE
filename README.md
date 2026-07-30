@@ -5,7 +5,7 @@
 The official implementation of the paper：
 >  [**When Fish Look Alike: Tracking Identities with Dual-branch Elasticity**](https://vranlee.github.io/TIDE/)  
 >  Vran Lee, Xin Liu, Yijie Wei, Yeqiang Liu, Hwa Liang Leo, Zhenbo Li*
->  [**\[Project\]**](https://vranlee.github.io/TIDE/) [**\[Paper\]**](#TODO) [**\[Code\]**](https://github.com/vranlee/TIDE)
+>  [**\[Project\]**](https://vranlee.github.io/TIDE/) [**\[Paper\]**](http://arxiv.org/abs/2607.26412) [**\[Code\]**](https://github.com/vranlee/TIDE)
 
 </div>
 
@@ -128,4 +128,14 @@ Our [pretrained models](https://pan.baidu.com/s/10yF69NL-A_uOCsu_prcMzw?pwd=v57h
 A large part of the code is borrowed from [sompt22](https://github.com/sompt22/CountingMOT), [apple](https://github.com/apple/ml-fastvit), and [ultralytics](https://github.com/ultralytics/ultralytics). Thanks for their wonderful works!
 
 ## 📜 Citation
-*Citation is available once the arXiv ver. released.*
+```bibtex
+@misc{lee2026fishlookaliketracking,
+      title={When Fish Look Alike: Tracking Identities with Dual-branch Elasticity}, 
+      author={Vran Lee and Xin Liu and Yijie Wei and Yeqiang Liu and Hwa Liang Leo and Zhenbo Li},
+      year={2026},
+      eprint={2607.26412},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2607.26412}, 
+}
+```
